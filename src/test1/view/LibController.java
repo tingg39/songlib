@@ -94,7 +94,10 @@ public class LibController
 			Song temp = songlist.get(i);
 			if(songname.equals(temp.getSongname()))
 			{
-				
+				Alert alerror = new Alert(AlertType.INFORMATION);
+				alerror.setTitle("Error");
+				alerror.setHeaderText("song already exists in the library");
+				Optional<ButtonType> res = alerror.showAndWait();
 					return;
 			}
 		}
