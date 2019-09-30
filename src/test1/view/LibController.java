@@ -50,7 +50,7 @@ public class LibController
 		editartist.setText("");
 		editalbum.setText("");
 		edityear.setText("");
-		listview.getSelectionModel().selectedItemProperty().addListener((slist, oldVal, newVal) -> songDetail(newVal));
+		listview.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> songDetail(newVal));
 		
 	}
 	
@@ -74,6 +74,8 @@ public class LibController
 	
 	public void songDetail(Song s)
 	{
+		if(s == null)
+			return;
 		artist.setText(s.getArtist());
 		album.setText(s.getAlbum());
 		year.setText(s.getYear());
@@ -92,18 +94,22 @@ public class LibController
 			Song temp = songlist.get(i);
 			if(songname.equals(temp.getSongname()))
 			{
-				Alert al = new Alert(AlertType.CONFIRMATION);
-				al.setTitle("Alert");
-				al.setHeaderText("you are going to add a song to the list");
-				Optional<ButtonType> res = al.showAndWait();
-				if(res.get() == ButtonType.OK)
-				{
-					Song tempsong = new Song(songname, artist, album, year);
-					songlist.add(tempsong);
-					FXCollections.sort(songlist, new compareSong());
-					listview.setItems(songlist);
-				}
+				
+					return;
 			}
+		}
+		Alert al = new Alert(AlertType.CONFIRMATION);
+		al.setTitle("Alert");
+		al.setHeaderText("you are going to add a song to the list");
+		Optional<ButtonType> res = al.showAndWait();
+		if(res.get() == ButtonType.OK)
+		{
+			Song tempsong = new Song(songname, artist, album, year);
+			songlist.add(tempsong);
+			FXCollections.sort(songlist, new compareSong());
+			listview.setItems(songlist);
+			listview.getSelectionModel().select(findSong(songname));
+			songDetail(tempsong);
 		}
 	}
 	
@@ -115,6 +121,19 @@ public class LibController
 	public void editSong()
 	{
 		
+	}
+	
+	public int findSong(String name)
+	{
+		int index;
+		for(index = 0; index < songlist.size(); index++)
+		{
+			if(name.equalsIgnoreCase(songlist.get(index).getSongname()))
+			{
+				break;
+			}
+		}
+		return index;
 	}
 	
 	class compareSong implements Comparator<Song>{
