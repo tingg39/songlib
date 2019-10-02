@@ -51,6 +51,25 @@ public class LibController
 		editalbum.setText("");
 		edityear.setText("");
 		listview.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> songDetail(newVal));
+		mainStage.setOnCloseRequest(event -> 
+		{
+			try {
+				FileWriter intoTxt = new FileWriter("list.txt");
+				int i;
+				for(i = 0; i < songlist.size(); i++)
+				{
+					if(songlist.get(i).getAlbum().contentEquals(""))
+						songlist.get(i).setAlbum(" ");
+					if(songlist.get(i).getYear().contentEquals(""))
+						songlist.get(i).setYear(" ");
+					intoTxt.write(songlist.get(i).writeTxt() + "\n");
+				}
+				intoTxt.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		});
 		
 	}
 	
@@ -85,9 +104,39 @@ public class LibController
 	{
 		int size = songlist.size();
 		String songname = editsong.getText();
+		if(songname == null || songname.equals(""))
+		{
+			Alert serr = new Alert(AlertType.INFORMATION);
+			serr.setTitle("Error");
+			serr.setHeaderText("need a song name");
+			Optional<ButtonType> ser = serr.showAndWait();
+			return;
+		}
 		String artist = editartist.getText();
+		if(artist == null || artist.equals(""))
+		{
+			Alert arterr = new Alert(AlertType.INFORMATION);
+			arterr.setTitle("Error");
+			arterr.setHeaderText("need an artist name");
+			Optional<ButtonType> aer = arterr.showAndWait();
+			return;
+		}
 		String album = editalbum.getText();
 		String year = edityear.getText();
+		if(!year.contentEquals(""))
+		{
+			try
+			{
+				Integer.parseInt(year);
+			}catch(NumberFormatException ex)
+			{
+				Alert numerr = new Alert(AlertType.INFORMATION);
+				numerr.setTitle("Error");
+				numerr.setHeaderText("year must be a number");
+				Optional<ButtonType> ner = numerr.showAndWait();
+				return;
+			}
+		}
 		int i;
 		for(i = 0; i < size; i++)
 		{
@@ -97,7 +146,7 @@ public class LibController
 				Alert alerror = new Alert(AlertType.INFORMATION);
 				alerror.setTitle("Error");
 				alerror.setHeaderText("song already exists in the library");
-				Optional<ButtonType> res = alerror.showAndWait();
+				Optional<ButtonType> aerr = alerror.showAndWait();
 					return;
 			}
 		}
@@ -113,6 +162,10 @@ public class LibController
 			listview.setItems(songlist);
 			listview.getSelectionModel().select(findSong(songname));
 			songDetail(tempsong);
+			editsong.setText("");
+			editartist.setText("");
+			editalbum.setText("");
+			edityear.setText("");
 		}
 	}
 	
