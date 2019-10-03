@@ -1,4 +1,4 @@
-// Yao Ting and Kshitij Bafna
+// Ting Yao and Kshitij Bafna
 package test1.view;
 
 import java.util.*;
@@ -174,6 +174,14 @@ public class LibController
 	{
 		Song currentSong = listview.getSelectionModel().getSelectedItem();
 		int size = songlist.size();
+		if(size == 0)
+		{
+			Alert err = new Alert(AlertType.INFORMATION);
+			err.setTitle("Error");
+			err.setHeaderText("there is no song in the libaray");
+			Optional<ButtonType> er = err.showAndWait();
+			return;
+		}
 		Alert al = new Alert(AlertType.CONFIRMATION);
 		al.setTitle("Alert");
 		al.setHeaderText("you are going to delete the current song in the list");
@@ -189,6 +197,12 @@ public class LibController
 				{
 						songlist.remove(i,i+1);
 						listview.setItems(songlist);
+						if(songlist.size() == 0)
+						{
+							artist.setText("");
+							album.setText("");
+							year.setText("");
+						}
 						break;
 				}
 			}
@@ -200,6 +214,14 @@ public class LibController
 	{
 		Song currentSong = listview.getSelectionModel().getSelectedItem();
 		int size = songlist.size();
+		if(size == 0)
+		{
+			Alert err = new Alert(AlertType.INFORMATION);
+			err.setTitle("Error");
+			err.setHeaderText("there is no song in the libaray");
+			Optional<ButtonType> er = err.showAndWait();
+			return;
+		}
 		String new_songname = editsong.getText();
 		String new_artist = editartist.getText();
 		String new_year = edityear.getText();
