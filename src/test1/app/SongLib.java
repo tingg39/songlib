@@ -1,4 +1,4 @@
-// Yao Ting and Kshitij Bafna
+//Ting Yao and Kshitij Bafna
 package test1.app;
 
 import javafx.application.Application;
