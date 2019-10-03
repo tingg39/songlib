@@ -1,3 +1,4 @@
+// Yao Ting and Kshitij Bafna
 package test1.view;
 
 import java.util.*;
@@ -141,7 +142,7 @@ public class LibController
 		for(i = 0; i < size; i++)
 		{
 			Song temp = songlist.get(i);
-			if(songname.equals(temp.getSongname()))
+			if(songname.equals(temp.getSongname()) && artist.equals(temp.getArtist()))
 			{
 				Alert alerror = new Alert(AlertType.INFORMATION);
 				alerror.setTitle("Error");
@@ -169,14 +170,91 @@ public class LibController
 		}
 	}
 	
-	public void deleteSong()
+	public void deleteSong(ActionEvent e)
 	{
+		Song currentSong = listview.getSelectionModel().getSelectedItem();
+		int size = songlist.size();
+		Alert al = new Alert(AlertType.CONFIRMATION);
+		al.setTitle("Alert");
+		al.setHeaderText("you are going to delete the current song in the list");
+		Optional<ButtonType> res = al.showAndWait();
 		
+		if(res.get() == ButtonType.OK)
+		{
+			for(int i = 0; i < size; i++)
+			{
+				Song temp = songlist.get(i);
+
+				if(currentSong.getSongname().equals(temp.getSongname()) && currentSong.getArtist().equals(temp.getArtist()))
+				{
+						songlist.remove(i,i+1);
+						listview.setItems(songlist);
+						break;
+				}
+			}
+			
+		}
 	}
 	
-	public void editSong()
+	public void editSong(ActionEvent e)
 	{
+		Song currentSong = listview.getSelectionModel().getSelectedItem();
+		int size = songlist.size();
+		String new_songname = editsong.getText();
+		String new_artist = editartist.getText();
+		String new_year = edityear.getText();
+		String new_album = editalbum.getText();
+		if(!new_year.contentEquals(""))
+		{
+			try
+			{
+				Integer.parseInt(new_year);
+			}catch(NumberFormatException ex)
+			{
+				Alert numerr = new Alert(AlertType.INFORMATION);
+				numerr.setTitle("Error");
+				numerr.setHeaderText("year must be a number");
+				Optional<ButtonType> ner = numerr.showAndWait();
+				return;
+			}
+		}
 		
+		for(int i = 0; i < size; i++)
+		{
+			Song temp = songlist.get(i);
+
+			if(new_songname.equals(temp.getSongname()) && new_artist.equals(temp.getArtist()))
+			{
+				Alert alerror = new Alert(AlertType.INFORMATION);
+				alerror.setTitle("Error");
+				alerror.setHeaderText("song already exists in the library");
+				Optional<ButtonType> aerr = alerror.showAndWait();
+					return;
+			}
+		}
+		Alert al = new Alert(AlertType.CONFIRMATION);
+		al.setTitle("Alert");
+		al.setHeaderText("you are going to edit the current song in the list");
+		Optional<ButtonType> res = al.showAndWait();
+		if(res.get() == ButtonType.OK)
+		{
+			if(new_songname != null && !new_songname.equals(""))
+				currentSong.setSongname(new_songname);
+			if(new_artist != null && !new_artist.equals(""))
+				currentSong.setArtist(new_artist);
+			if(new_album != null && !new_album.equals(""))
+				currentSong.setAlbum(new_album);
+			if(new_year != null && !new_year.equals(""))
+				currentSong.setYear(new_year);
+			FXCollections.sort(songlist, new compareSong());
+			listview.setItems(songlist);
+			listview.getSelectionModel().select(findSong(currentSong.getSongname()));
+			songDetail(currentSong);
+			editsong.setText("");
+			editartist.setText("");
+			editalbum.setText("");
+			edityear.setText("");
+		}
 	}
 	
 	public int findSong(String name)
