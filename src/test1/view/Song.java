@@ -62,6 +62,6 @@ public class Song
 	
 	public String toString()
 	{
-		return songname;
+		return songname + " - " + artist;
 	}
 }

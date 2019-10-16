@@ -276,6 +276,21 @@ public class LibController
 			editartist.setText("");
 			editalbum.setText("");
 			edityear.setText("");
+			try {
+				FileWriter intoTxt = new FileWriter("list.txt");
+				int i;
+				for(i = 0; i < songlist.size(); i++)
+				{
+					if(songlist.get(i).getAlbum().contentEquals(""))
+						songlist.get(i).setAlbum(" ");
+					if(songlist.get(i).getYear().contentEquals(""))
+						songlist.get(i).setYear(" ");
+					intoTxt.write(songlist.get(i).writeTxt() + "\n");
+				}
+				intoTxt.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	
